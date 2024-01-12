@@ -5,7 +5,6 @@ edition = "2021"
 authors = ["Brandon Gill <brandongill123@gmail.com>"]
 categories = ["encoding", "web-programming", "parsing"]
 description = "A simple Google News RSS feed parser"
-documentation = ""
 keywords = ["gnews-rs", "gnews", "google-news", "rss", "parser", "news", "feed", "google"]
 license = "MIT"
 readme = "README.md"
