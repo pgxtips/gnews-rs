@@ -59,6 +59,12 @@ async fn main() {
 
 ```
 
+# Contributing
+
+Thank you for considering contributing to gnews-rs! Contributions are essential for improving the project and making it more valuable for the community.
+Feel free to fork/make pull request on the repo, your contributions are most welcome!
+
+
 ## License
 
 The source code for the site is licensed under the MIT license, which you can find in
