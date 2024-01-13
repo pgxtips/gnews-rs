@@ -60,6 +60,7 @@ fn process_news_channel(channel: Result<Channel, Box<dyn Error>>) -> Result<Vec<
 }
 
 
+#[allow(non_snake_case)]
 pub mod NewsClient {
     use super::*;
     pub use crate::news_client::constants::Topic as Topic;
