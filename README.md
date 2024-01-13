@@ -22,7 +22,7 @@ cargo add gnews-rs
 - Using Cargo.toml
 ```
 [dependencies]
-gnews-rs = "0.1.0"
+gnews-rs = "1.0.2"
 ```
 
 ## Usage
