@@ -27,7 +27,37 @@ gnews-rs = "0.1.0"
 
 ## Usage
 
-To be added...
+```
+
+use gnews_rs::NewsClient;
+
+#[tokio::main]
+async fn main() {
+    let top_stories = NewsClient::get_top_stories().await;
+
+    let topic_world = NewsClient::get_topic(NewsClient::Topic::World).await;
+    let topic_health = NewsClient::get_topic(NewsClient::Topic::Health).await;
+    let topic_sports = NewsClient::get_topic(NewsClient::Topic::Sports).await;
+    let topic_science = NewsClient::get_topic(NewsClient::Topic::Science).await;
+    let topic_technology = NewsClient::get_topic(NewsClient::Topic::Technology).await;
+    let topic_business = NewsClient::get_topic(NewsClient::Topic::Business).await;
+    let topic_entertainment = NewsClient::get_topic(NewsClient::Topic::Entertainment).await;
+
+    let search_news = NewsClient::get_search("rust programming").await;
+
+    for story in search_news{
+        println!("Title: {}", story.title);
+        println!("Link: {}", story.link);
+        println!("Description: {}", story.description);
+        println!("Published: {}", story.pub_date);
+        println!("guid: {}", story.guid);
+        println!("comments: {}", story.comments);
+        println!("==============================");
+    }
+}
+
+
+```
 
 ## License
 
