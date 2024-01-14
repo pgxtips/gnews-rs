@@ -1,3 +1,7 @@
+use std::error::Error;
+use rss::Channel;
+use scraper::{Html, Selector};
+
 mod defs;
 mod constants;
 
@@ -6,9 +10,6 @@ use constants::{TOP_STORIES_RSS, TOPICS_RSS, SEARCH_RSS};
 use constants::Topic as Topic;
 use defs::News as News;
 
-
-use std::error::Error;
-use rss::Channel;
 
 async fn get_top_stories_rss() -> Result<Channel, Box<dyn Error>>{
     let resp = reqwest::get(TOP_STORIES_RSS).await?.bytes().await?;
@@ -69,6 +70,50 @@ async fn get_link(rss_link: String, news_source: String) -> String {
     }
 }
 
+async fn get_img_link(link: String) -> String{
+
+    let client = reqwest::Client::new();
+    let resp = client
+        .get(link)
+        .header("User-Agent", "gnews-rs")
+        .header("Accept", "text/html")
+        .header("Accept-Language", "en-US,en;q=0.9")
+        .header("Connection", "keep-alive")
+        .send()
+        .await;
+
+    match resp {
+        Ok(resp) => {
+            let resp_text = resp.text().await;
+
+            match resp_text {
+                Ok(resp_text) => {
+                    let doc = Html::parse_document(&resp_text);
+                    let og_selector = Selector::parse("meta[property='og:image']").unwrap();
+                    // Find the first matching meta tag
+                        if let Some(meta_tag) = doc.select(&og_selector).next() {
+                            // Extract the content attribute value
+                            let content = meta_tag.value().attr("content");
+                            // Return the content value
+                            content.unwrap().to_string()
+                        } else {
+                            String::new()
+                        }
+                },
+                Err(e) => {
+                    log::error!("Error: {}", e);
+                    String::new()
+                }
+            }
+        }, 
+        Err(e) => {
+            log::error!("Error: {}", e);
+            String::new()
+        }
+    }
+}
+
+
 async fn process_news_channel(channel: Result<Channel, Box<dyn Error>>) -> Result<Vec<News>, Box<dyn Error>>{
     let feed = channel?;
     let mut news: Vec<News> = Vec::new();
@@ -83,6 +128,7 @@ async fn process_news_channel(channel: Result<Channel, Box<dyn Error>>) -> Resul
             .to_string();
         new_item.rss_link = item.link().unwrap_or_default().to_string();
         new_item.origin_link = get_link(new_item.rss_link.to_owned(), new_item.source.to_owned()).await;
+        new_item.thumbnail_link = get_img_link(new_item.origin_link.to_owned()).await;
         new_item.description = item.description().unwrap_or_default().to_string();
         new_item.pub_date = item.pub_date().unwrap_or_default().to_string();
         new_item.guid = item.guid().unwrap_or(&rss::Guid::default()).value().to_string();

@@ -10,6 +10,7 @@ gnews-rs is a Rust crate that provides a simple interface to retrieve the latest
 - **Easy to Use:** Straightforward API for fetching news headlines and articles.
 - **Customizable:** Retrieve by top stories, topic and search.
 - **Asynchronous:** Built with Tokio for non-blocking and efficient news retrieval.
+- **Extra Features:** Scrapes thumbnails and full news source link. 
 
 ## Installation
 
@@ -22,7 +23,7 @@ cargo add gnews-rs
 - Using Cargo.toml
 ```
 [dependencies]
-gnews-rs = "1.1.1"
+gnews-rs = "1.1.3"
 ```
 
 ## Usage
@@ -47,7 +48,9 @@ async fn main() {
 
     for story in search_news{
         println!("Title: {}", story.title);
-        println!("Link: {}", story.link);
+        println!("Google News link: {}", story.rss_link);
+        println!("True Origin link: {}", story.origin_link);
+        println!("Thumbnail link: {}", story.thumbnail_link);
         println!("Description: {}", story.description);
         println!("Published: {}", story.pub_date);
         println!("guid: {}", story.guid);
